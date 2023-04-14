@@ -2,56 +2,6 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "(gdb) Lancer",
-      "type": "cppdbg",
-      "request": "launch",
-      "program": "entrer le nom du programme, par exemple ${workspaceFolder}/a.exe",
-      "args": [],
-      "stopAtEntry": false,
-      "cwd": "${fileDirname}",
-      "environment": [],
-      "externalConsole": false,
-      "MIMode": "gdb",
-      "miDebuggerPath": "/path/to/gdb",
-      "setupCommands": [
-          {
-              "description": "Activer l'impression en mode Pretty pour gdb",
-              "text": "-enable-pretty-printing",
-              "ignoreFailures": true
-          },
-          {
-              "description": "Définir la version désassemblage sur Intel",
-              "text": "-gdb-set disassembly-flavor intel",
-              "ignoreFailures": true
-          }
-      ]
-    },
-    {
-      "name": "(gdb) Attachement de Bash sur Windows",
-      "type": "cppdbg",
-      "request": "attach",
-      "program": "entrer le nom du programme, par exemple ${workspaceFolder}/a.exe",
-      "processId": "${command:pickRemoteProcess}",
-      "pipeTransport": {
-        "debuggerPath": "/usr/bin/gdb",
-        "pipeProgram": "${env:windir}\\system32\\bash.exe",
-        "pipeArgs": ["-c"],
-        "pipeCwd": ""
-      },
-      "setupCommands": [
-          {
-              "description": "Activer l'impression en mode Pretty pour gdb",
-              "text": "-enable-pretty-printing",
-              "ignoreFailures": true
-          },
-          {
-              "description": "Définir la version désassemblage sur Intel",
-              "text": "-gdb-set disassembly-flavor intel",
-              "ignoreFailures": true
-          }
-      ]
-    },
-    {
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
       "request": "launch",
