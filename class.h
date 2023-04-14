@@ -11,7 +11,11 @@ class Parametre
     int sizeScreenOnY;
     int horizontale; 
     int verticale; 
-    int bouton; 
+    int bouton;
+     
+    //déclaration des variables pour les appuis long 
+    int _pressStart; 
+    bool _buttonPressed ;
 
     long timeCpt; //pour les deplacement des mechant et du hero 
     long timeCpt2;  //pour les tirs du hero 
@@ -25,6 +29,18 @@ class Parametre
     
     void display(int id, int x, int y); 
     void notDisplay( int x, int y);
+
+    bool boutonLeft(); 
+    bool boutonRight(); 
+    bool boutonTop(); 
+    bool boutonBottom(); 
+    bool boutonShortPress(); 
+    bool specialMoveLeft(); 
+    bool specialMoveRight (); 
+    bool specialMoveTop();
+    bool specialMoveBottom(); 
+    bool boutonLongPress(); 
+
     
   protected: 
     
@@ -38,7 +54,7 @@ class Position: virtual public Parametre
      
   public:
     int ***ary = NULL; 
-    int _numberOfEatchCaractere[12]; 
+    int numberOfEatchCaractere[12]; 
 
     int sizeX; 
     int sizeY; 
@@ -61,16 +77,21 @@ class Position: virtual public Parametre
     void shiftToTop (); 
     void shiftToBottom (); 
     void manualShift(); 
+    void infinite(); 
+
+    bool noCharacterLeft(int id , int number, int numberOfObstacle); 
+    bool noCharacterRight(int id , int number, int numberOfObstacle); 
+    bool noCharacterTop(int id , int number, int numberOfObstacle); 
+    bool noCharacterBottom(int id , int number, int numberOfObstacle); 
+    
 };
 
 
-class Hero: public Parametre
+class Hero: virtual public Parametre
 {
   protected:
     Position *position;
-    //déclaration des variables pour les appuis long 
-    int _pressStart; 
-    bool _buttonPressed ; 
+     
     
   public:
     int id;
@@ -80,18 +101,7 @@ class Hero: public Parametre
 
     Hero(Position *position); 
 
-    void setHeroSpeed(int speendOnX, int speedOnY); 
-
-    bool boutonLeft(); 
-    bool boutonRight(); 
-    bool boutonTop(); 
-    bool boutonBottom(); 
-    bool boutonShortPress(); 
-    bool specialMoveLeft(); 
-    bool specialMoveRight (); 
-    bool specialMoveTop();
-    bool specialMoveBottom(); 
-    bool boutonLongPress(); 
+    void setHeroSpeed(int speendOnX, int speedOnY);
     
     void goLeft(); 
     void goRight(); 

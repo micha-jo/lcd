@@ -3,11 +3,6 @@
 
 #include "class.h"
 LiquidCrystal_I2C lcd(0x27, 20, 4);
-int highLimite = 1000; 
-int lowLimite = 23; 
-int sizeScreenOnX = 16 ; 
-int sizeScreenOnY = 3 ;
-
 
 /*************************Parametre****************************************/
 //configuration of the differente equipements: screen and joystick
@@ -19,6 +14,10 @@ Parametre::Parametre(){
   horizontale = A1; 
   verticale= A0; 
   bouton = 2; 
+
+  //initialisation des variables pour les  appuis long
+  _buttonPressed = false; 
+  _pressStart = 0; 
 }
 Parametre::Parametre(int highLimite, int lowLimite, int sizeScreenOnX, int sizeScreenOny, int horizontale, int verticale, int bouton){
   highLimite = highLimite; 
@@ -28,9 +27,13 @@ Parametre::Parametre(int highLimite, int lowLimite, int sizeScreenOnX, int sizeS
   horizontale = horizontale; 
   verticale= verticale; 
   bouton = bouton; 
+
+  //initialisation des variables pour les  appuis long
+  _buttonPressed = false; 
+  _pressStart = 0; 
 }
 
-// initialisation of the programme 
+// INITILISATION OF THE PROGRAMME 
 // CETTE METHODE DOIT ETRE OBLIGATOIREMENT PRESENTE DANS LE SETUP
 void Parametre::initialisation(uint8_t *hero, uint8_t *mechant, uint8_t *obstacle, uint8_t *key, uint8_t *door, uint8_t *life,uint8_t *trap, uint8_t *arrow)
 {
@@ -55,6 +58,7 @@ void Parametre::initialisation(uint8_t *hero, uint8_t *mechant, uint8_t *obstacl
   timeCpt3 = millis(); 
   timeCpt4 = millis(); 
 }
+//END INITILISATION OF THE PROGRAMME 
 
 void Parametre::display(int id, int x, int y){
   lcd.setCursor(x,y);
@@ -83,6 +87,88 @@ void Parametre::notDisplay(int x, int y){
   lcd.print(" ");
 } 
 
+//SETUP REQUEST: ensemble de booléen qui renvoie true si la commande est réalisé
+bool Parametre::boutonLeft(){
+  if (analogRead(horizontale) > highLimite ){
+    return true ;
+  }else {
+    return false ;
+  }
+}
+bool Parametre::boutonRight(){
+  if (analogRead(horizontale) <lowLimite ){
+    return true ;
+  }else {
+    return false ;
+  }
+}
+bool Parametre::boutonTop(){
+  if (analogRead(verticale) <lowLimite ){
+    return true ;
+  }else {
+    return false ;
+  }
+}
+bool Parametre::boutonBottom(){
+  if (analogRead(verticale) >highLimite){
+    return true ;
+  }else {
+    return false ;
+  }
+}
+bool Parametre::boutonShortPress(){
+  if (digitalRead(bouton) == LOW ){
+    return true ;
+  }else {
+    return false ;
+  }
+}
+bool Parametre::specialMoveLeft(){
+  if (analogRead(horizontale) > highLimite && digitalRead(bouton) == LOW){
+    return true ;
+  }else {
+    return false ;
+  }
+}
+bool Parametre::specialMoveRight(){
+  if (analogRead(horizontale) <lowLimite && digitalRead(bouton) == LOW){
+    return true ;
+  }else {
+    return false ;
+  }
+}
+bool Parametre::specialMoveTop(){
+  if (analogRead(verticale) <lowLimite && digitalRead(bouton) == LOW){
+    return true ;
+  }else {
+    return false ;
+  }
+}
+bool Parametre::specialMoveBottom(){
+  if (analogRead(verticale) > highLimite && digitalRead(bouton) == LOW){
+    return true ;
+  }else {
+    return false ;
+  }
+}
+bool Parametre::boutonLongPress(){
+  if (digitalRead(bouton) == LOW && !_buttonPressed){
+    _buttonPressed = true;
+    _pressStart = millis(); 
+  }else if (digitalRead(bouton) == HIGH ) {
+    _pressStart = 0; 
+    _buttonPressed = false;
+    return false; 
+  }
+  if (digitalRead(bouton) == LOW && _buttonPressed && millis() - _pressStart >= 500) {
+    // Un appui long a été détecté
+    _pressStart = 0; 
+    return true;
+  }
+}
+//END SETUP REQUEST
+
+
 
 /********************************Position************************************/
 Position::Position(){
@@ -106,31 +192,31 @@ void Position::setRunningSpeed(int runningSpeed){
 
 //créé le tableau contenant la position de l'ensemble des caractères
 void Position::generatePosition(int numberOfHero, int numberOfmechant ,int numberOfObstacle, int numberOfKey, int numberOfDoor, int numberOfLife, int numberOfTrap, int numberOfArrow, int numberOfEqual, int numberOfMinus, int numberOfO, int numberOfStar){
-  _numberOfEatchCaractere[0] = 1;
-  _numberOfEatchCaractere[1] = numberOfmechant;
-  _numberOfEatchCaractere[2] = numberOfObstacle;
-  _numberOfEatchCaractere[3] = numberOfKey;
-  _numberOfEatchCaractere[4] = numberOfDoor;
-  _numberOfEatchCaractere[5] = numberOfLife;
-  _numberOfEatchCaractere[6] = numberOfTrap;
-  _numberOfEatchCaractere[7] = numberOfArrow;
-  _numberOfEatchCaractere[8] = numberOfEqual;
-  _numberOfEatchCaractere[9] = numberOfMinus;
-  _numberOfEatchCaractere[10] = numberOfO;
-  _numberOfEatchCaractere[11] = numberOfStar;
+  numberOfEatchCaractere[0] = 1;
+  numberOfEatchCaractere[1] = numberOfmechant;
+  numberOfEatchCaractere[2] = numberOfObstacle;
+  numberOfEatchCaractere[3] = numberOfKey;
+  numberOfEatchCaractere[4] = numberOfDoor;
+  numberOfEatchCaractere[5] = numberOfLife;
+  numberOfEatchCaractere[6] = numberOfTrap;
+  numberOfEatchCaractere[7] = numberOfArrow;
+  numberOfEatchCaractere[8] = numberOfEqual;
+  numberOfEatchCaractere[9] = numberOfMinus;
+  numberOfEatchCaractere[10] = numberOfO;
+  numberOfEatchCaractere[11] = numberOfStar;
 
   ary = new int **[12]; 
   for(int i = 0; i < 12; i++){
-    ary[i] = new int *[_numberOfEatchCaractere[i]]; 
-    for (int j = 0 ; j< _numberOfEatchCaractere[i]; j++){
+    ary[i] = new int *[numberOfEatchCaractere[i]]; 
+    for (int j = 0 ; j< numberOfEatchCaractere[i]; j++){
       ary[i][j] = new int [3];
     }
   }
 }
 
 void Position::deletePosition(){
-  for(int i =0; i<_numberOfEatchCaractere[i]; i++){
-    for (int j = 0 ; j< _numberOfEatchCaractere[i]; j++){
+  for(int i =0; i< numberOfEatchCaractere[i]; i++){
+    for (int j = 0 ; j< numberOfEatchCaractere[i]; j++){
       delete [] ary[i][j];
     }
     delete [] ary[i];
@@ -140,13 +226,13 @@ void Position::deletePosition(){
 
 
 /*
-*Type of display 
+*TYPE OF DISPLAY: le type de jeu 
 */
 void Position::typeZelda(){
   lcd.clear(); 
   int starCounter; 
   for (int i = 0 ; i < 12 ; i++){
-    for (int j =0 ; j < _numberOfEatchCaractere[i]; j++ ){
+    for (int j =0 ; j < numberOfEatchCaractere[i]; j++ ){
       
       if (i == 0){
         ary[i][j][0] = 0 ;
@@ -181,9 +267,10 @@ void Position::typeZelda(){
   }
 }
 
+//compare la position d'un aux  parametre x et y à l'ensemble du tableau ary
 bool Position::compareAll(int x, int y){
   for (int i = 0; i < 12; i++){
-    for (int j = 0; j< _numberOfEatchCaractere[i]; j++){
+    for (int j = 0; j< numberOfEatchCaractere[i]; j++){
       if (ary[i][j][0] == x && ary[i][j][1] == y){
         return false; 
       }
@@ -198,18 +285,23 @@ bool Position::compareAll(int x, int y){
 
 
 /*
-*Mode of Display
+*MODE OF DISPLAY: gére le deffilement de l'écran
 */
 void Position::shiftToLeft(){ 
   if (sizeXCpt + sizeScreenOnX <sizeX){
     if (millis () > timeCpt + runningSpeed){
       sizeXCpt ++;
       for(int i = 0; i < 12; i++){
-        for (int j = 0 ; j< _numberOfEatchCaractere[i]; j++){
+        for (int j = 0 ; j< numberOfEatchCaractere[i]; j++){
           if (i==0){
-            ary[i][j][0] ++;
+            if (noCharacterRight(0,0,2)){
+              ary[i][j][0] ++;
+            }
           }else if (i ==1 ){
-            ary[i][j][0] ++;
+            for (int k = 1; k<14; k++){
+              if (noCharacterRight(0,0,k))
+                ary[i][j][0] ++;
+            }
           }else{
             if (ary[i][j][0]>=sizeXCpt && ary[i][j][0]<= sizeScreenOnX+sizeXCpt &&ary[i][j][1]>=sizeYCpt && ary[i][j][1]<= sizeScreenOnY+sizeYCpt){
               display(i, ary[i][j][0]-sizeXCpt, ary[i][j][1]-sizeYCpt );
@@ -230,11 +322,16 @@ void Position::shiftToRight(){
     if (millis () > timeCpt + runningSpeed){
       sizeXCpt --;
       for(int i = 0; i < 12; i++){
-        for (int j = 0 ; j< _numberOfEatchCaractere[i]; j++){
+        for (int j = 0 ; j< numberOfEatchCaractere[i]; j++){
           if (i==0){
-            ary[i][j][0] --;
+            if (noCharacterLeft(0,0,2)){
+              ary[i][j][0] --;
+            }
           }else if (i ==1 ){
-            ary[i][j][0] --;
+            for (int k = 1; k<14; k++){
+              if (noCharacterLeft(0,0,k))
+                ary[i][j][0] --;
+            }
           }else{
             if (ary[i][j][0]>=sizeXCpt-1 && ary[i][j][0]<= sizeScreenOnX+sizeXCpt &&ary[i][j][1]>=sizeYCpt && ary[i][j][1]<= sizeScreenOnY+sizeYCpt){
               display(i, ary[i][j][0]-sizeXCpt, ary[i][j][1]-sizeYCpt);
@@ -256,11 +353,16 @@ void Position::shiftToTop(){
       sizeYCpt ++;
       Serial.println (sizeYCpt);
       for(int i = 0; i < 12; i++){
-        for (int j = 0 ; j< _numberOfEatchCaractere[i]; j++){
+        for (int j = 0 ; j< numberOfEatchCaractere[i]; j++){
           if (i==0){
-            ary[i][j][1] ++;
+            if (noCharacterBottom(0,0,2)){
+              ary[i][j][1] ++;
+            }
           }else if (i ==1 ){
-            ary[i][j][1] ++;
+            for (int k = 1; k<14; k++){
+              if (noCharacterBottom(0,0,k))
+                ary[i][j][1] ++;
+            }
           }else{
             if (ary[i][j][0]>=sizeXCpt && ary[i][j][0]<= sizeScreenOnX+sizeXCpt && ary[i][j][1]>=sizeYCpt &&ary[i][j][1]<= sizeScreenOnY+sizeYCpt){
               display(i, ary[i][j][0]-sizeXCpt, ary[i][j][1]-sizeYCpt);
@@ -281,11 +383,16 @@ void Position::shiftToBottom(){
     if (millis () > timeCpt + runningSpeed){
       sizeYCpt --;
       for(int i = 0; i < 12; i++){
-        for (int j = 0 ; j< _numberOfEatchCaractere[i]; j++){
+        for (int j = 0 ; j< numberOfEatchCaractere[i]; j++){
           if (i==0){
-            ary[i][j][1] --;
+            if (noCharacterTop(0,0,2)){
+              ary[i][j][1] --;
+            }
           }else if (i ==1 ){
-            ary[i][j][1] --;
+            for (int k = 1; k<14; k++){
+              if (noCharacterTop(0,0,k))
+                ary[i][j][1] --;
+            }
           }else{
             if (ary[i][j][0]>=sizeXCpt && ary[i][j][0]<= sizeScreenOnX+sizeXCpt && ary[i][j][1]>=sizeYCpt &&ary[i][j][1]<= sizeScreenOnY+sizeYCpt){
               display(i, ary[i][j][0]-sizeXCpt, ary[i][j][1]-sizeYCpt);
@@ -301,6 +408,8 @@ void Position::shiftToBottom(){
     }
   }
 }
+
+//si le hero est en x = 1 et Y = 2 l'affiche est statique sinon il déffile 
 void Position::manualShift(){
   if (ary[0][0][0]-sizeXCpt>1){
     shiftToLeft(); 
@@ -316,11 +425,65 @@ void Position::manualShift(){
   }
 }
 
+void Position::infinite(){
+  if (millis () > timeCpt + runningSpeed){
+    sizeXCpt ++;
+    for(int i = 0; i < 12; i++){
+      for (int j = 0 ; j< numberOfEatchCaractere[i]; j++){
+        if (i==0){
+          ary[i][j][0] ++;
+        }else if (i ==1 ){
+          ary[i][j][0] ++;
+        }else{
+          if (ary[i][j][0]>=sizeXCpt && ary[i][j][0]<= sizeScreenOnX+sizeXCpt &&ary[i][j][1]>=sizeYCpt && ary[i][j][1]<= sizeScreenOnY+sizeYCpt){
+            display(i, ary[i][j][0]-sizeXCpt, ary[i][j][1]-sizeYCpt );
+            notDisplay(ary[i][j][0]-sizeXCpt+1, ary[i][j][1]-sizeYCpt);
+          }
+          else {
+            notDisplay(ary[i][j][0]-sizeXCpt+1, ary[i][j][1]-sizeYCpt);
+          }
+        }
+      }
+    }
+    timeCpt = millis();
+  }
+}
+//END MODE OF DISPLAY
 
-
-
-
-
+//CHECKED NEXT CHARACTER: renvoie true si la case d'à coter est vide
+bool Position::noCharacterLeft(int id , int number, int numberOfObstacle){
+  for (int i =0; i < numberOfEatchCaractere[numberOfObstacle]; i++){
+    if ((ary[id][number][0]-1==ary[numberOfObstacle][i][0])&&(ary[id][number][1]==ary[numberOfObstacle][i][1])&&ary[numberOfObstacle][i][2]==1){
+      return false ; 
+    }
+  }
+  return true;
+}
+bool Position::noCharacterRight(int id , int number, int numberOfObstacle){
+  for (int i =0; i < numberOfEatchCaractere[numberOfObstacle]; i++){
+    if ((ary[id][number][0]+1==ary[numberOfObstacle][i][0])&&(ary[id][number][1]==ary[numberOfObstacle][i][1])&&ary[numberOfObstacle][i][2]==1){
+      return false ; 
+    }
+  }
+  return true;
+}
+bool Position::noCharacterTop(int id , int number, int numberOfObstacle){
+  for (int i =0; i < numberOfEatchCaractere[numberOfObstacle]; i++){
+    if ((ary[id][number][0]==ary[numberOfObstacle][i][0])&&(ary[id][number][1]-1==ary[numberOfObstacle][i][1])&&ary[numberOfObstacle][i][2]==1){
+      return false ; 
+    }
+  }
+  return true;
+}
+bool Position::noCharacterBottom(int id , int number, int numberOfObstacle){
+  for (int i =0; i < numberOfEatchCaractere[numberOfObstacle]; i++){
+    if ((ary[id][number][0]==ary[numberOfObstacle][i][0])&&(ary[id][number][1]+1==ary[numberOfObstacle][i][1])&&ary[numberOfObstacle][i][2]==1){
+      return false ; 
+    }
+  }
+  return true;
+}
+//END CHECKED NEXT CHARACTER 
 
 
 
@@ -335,9 +498,7 @@ Hero::Hero(Position *position) {
   heroSpeedOnX = 400; 
   heroSpeedOnY = 400;
 
-  //initialisation des variables pour les  appuis long
-  _buttonPressed = false; 
-  _pressStart = 0; 
+  
   
 }
 
@@ -349,91 +510,10 @@ void Hero::setHeroSpeed(int speendOnX, int speedOnY){
   heroSpeedOnY = speedOnY;
 }
 
-//ensemble de booléen qui renvoie true si la commande est réalisé
-bool Hero::boutonLeft(){
-  if (analogRead(horizontale) > highLimite ){
-    return true ;
-  }else {
-    return false ;
-  }
-}
-bool Hero::boutonRight(){
-  if (analogRead(horizontale) <lowLimite ){
-    return true ;
-  }else {
-    return false ;
-  }
-}
-bool Hero::boutonTop(){
-  if (analogRead(verticale) <lowLimite ){
-    return true ;
-  }else {
-    return false ;
-  }
-}
-bool Hero::boutonBottom(){
-  if (analogRead(verticale) >highLimite){
-    return true ;
-  }else {
-    return false ;
-  }
-}
-bool Hero::boutonShortPress(){
-  if (digitalRead(bouton) == LOW ){
-    return true ;
-  }else {
-    return false ;
-  }
-}
-bool Hero::specialMoveLeft(){
-  if (analogRead(horizontale) > highLimite && digitalRead(bouton) == LOW){
-    return true ;
-  }else {
-    return false ;
-  }
-}
-bool Hero::specialMoveRight(){
-  if (analogRead(horizontale) <lowLimite && digitalRead(bouton) == LOW){
-    return true ;
-  }else {
-    return false ;
-  }
-}
-bool Hero::specialMoveTop(){
-  if (analogRead(verticale) <lowLimite && digitalRead(bouton) == LOW){
-    return true ;
-  }else {
-    return false ;
-  }
-}
-bool Hero::specialMoveBottom(){
-  if (analogRead(verticale) > highLimite && digitalRead(bouton) == LOW){
-    return true ;
-  }else {
-    return false ;
-  }
-}
-bool Hero::boutonLongPress(){
-  if (digitalRead(bouton) == LOW && !_buttonPressed){
-    _buttonPressed = true;
-    _pressStart = millis(); 
-  }else if (digitalRead(bouton) == HIGH ) {
-    _pressStart = 0; 
-    _buttonPressed = false;
-    return false; 
-  }
-  if (digitalRead(bouton) == LOW && _buttonPressed && millis() - _pressStart >= 500) {
-    // Un appui long a été détecté
-    _pressStart = 0; 
-    return true;
-    
-  }
-}
 
-//
 void Hero::goLeft(){
   if (boutonLeft()){
-    if (1==1/*noObstacleRight(2)*/){
+    if (position->ary[this->id][this->number][0] > position->sizeXCpt && position->noCharacterLeft( this->id, this->number,2)){
       display(this->id, position->ary[this->id][this->number][0]-1-position->sizeXCpt, position->ary[this->id][this->number][1]-position->sizeYCpt);
       notDisplay(position->ary[this->id][this->number][0]-position->sizeXCpt, position->ary[this->id][this->number][1]-position->sizeYCpt);
       position->ary[this->id][this->number][0] --;
@@ -443,7 +523,7 @@ void Hero::goLeft(){
 }
 void Hero::goRight(){
   if (boutonRight()){
-    if (1==1/*noObstacleRight(2)*/){
+    if (position->ary[this->id][this->number][0] < sizeScreenOnX+position->sizeXCpt && position->noCharacterRight(this->id, this->number, 2)){
       display(this->id, position->ary[this->id][this->number][0]+1-position->sizeXCpt, position->ary[this->id][this->number][1]-position->sizeYCpt);
       notDisplay(position->ary[this->id][this->number][0]-position->sizeXCpt, position->ary[this->id][this->number][1]-position->sizeYCpt);
       position->ary[this->id][this->number][0] ++;
@@ -453,8 +533,8 @@ void Hero::goRight(){
 }
 void Hero::goTop(){
   if (boutonTop()){
-    if (1==1/*noObstacleRight(2)*/){
-      display(this->id, position->ary[this->id][this->number][0]-position->sizeXCpt, position->ary[this->id][this->number][1]-position->sizeYCpt-1);
+    if (position->ary[this->id][this->number][1] > position->sizeYCpt && position->noCharacterTop(this->id, this->number, 2)){
+      display(this->id, position->ary[this->id][this->number][0]-position->sizeXCpt, position->ary[this->id][this->number][1]-1-position->sizeYCpt);
       notDisplay(position->ary[this->id][this->number][0]-position->sizeXCpt, position->ary[this->id][this->number][1]-position->sizeYCpt);
       position->ary[this->id][this->number][1] --;
       timeCpt = millis();  
@@ -463,7 +543,7 @@ void Hero::goTop(){
 }
 void Hero::goBottom(){
   if (boutonBottom()){
-    if (1==1/*noObstacleRight(2)*/){
+    if (position->ary[this->id][this->number][1] < sizeScreenOnY+position->sizeYCpt && position->noCharacterBottom(this->id, this->number, 2)){
       display(this->id, position->ary[this->id][this->number][0]-position->sizeXCpt, position->ary[this->id][this->number][1]+1-position->sizeYCpt);
       notDisplay(position->ary[this->id][this->number][0]-position->sizeXCpt, position->ary[this->id][this->number][1]-position->sizeYCpt);
       position->ary[this->id][this->number][1] ++;
@@ -473,11 +553,11 @@ void Hero::goBottom(){
 }
 
 void Hero::move(){
+  display(this->id, position->ary[this->id][this->number][0]-position->sizeXCpt, position->ary[this->id][this->number][1]-position->sizeYCpt);
   if (millis()> timeCpt + heroSpeedOnX){
     goRight();
     goLeft(); 
   }
-  
   if (millis()> timeCpt + heroSpeedOnY){
    goBottom();
    goTop(); 
