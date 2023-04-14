@@ -211,8 +211,13 @@ void Position::shiftToLeft(){
           }else if (i ==1 ){
             ary[i][j][0] ++;
           }else{
-            display(i, ary[i][j][0]-sizeXCpt, ary[i][j][1]-sizeYCpt );
-            notDisplay(ary[i][j][0]-sizeXCpt+1, ary[i][j][1]-sizeYCpt);
+            if (ary[i][j][0]>=sizeXCpt && ary[i][j][0]<= sizeScreenOnX+sizeXCpt &&ary[i][j][1]>=sizeYCpt && ary[i][j][1]<= sizeScreenOnY+sizeYCpt){
+              display(i, ary[i][j][0]-sizeXCpt, ary[i][j][1]-sizeYCpt );
+              notDisplay(ary[i][j][0]-sizeXCpt+1, ary[i][j][1]-sizeYCpt);
+            }
+            else {
+              notDisplay(ary[i][j][0]-sizeXCpt+1, ary[i][j][1]-sizeYCpt);
+            }
           }
         }
       }
@@ -231,8 +236,13 @@ void Position::shiftToRight(){
           }else if (i ==1 ){
             ary[i][j][0] --;
           }else{
-            display(i, ary[i][j][0]-sizeXCpt+1, ary[i][j][1]-sizeYCpt);
-            notDisplay(ary[i][j][0]-sizeXCpt, ary[i][j][1]-sizeYCpt);
+            if (ary[i][j][0]>=sizeXCpt-1 && ary[i][j][0]<= sizeScreenOnX+sizeXCpt &&ary[i][j][1]>=sizeYCpt && ary[i][j][1]<= sizeScreenOnY+sizeYCpt){
+              display(i, ary[i][j][0]-sizeXCpt, ary[i][j][1]-sizeYCpt);
+              notDisplay(ary[i][j][0]-sizeXCpt-1, ary[i][j][1]-sizeYCpt);
+            }
+            else {
+              notDisplay(ary[i][j][0]-sizeXCpt-1, ary[i][j][1]-sizeYCpt);
+            }
           }
         }
       }
@@ -252,8 +262,13 @@ void Position::shiftToTop(){
           }else if (i ==1 ){
             ary[i][j][1] ++;
           }else{
-            display(i, ary[i][j][0]-sizeXCpt, ary[i][j][1]-sizeYCpt-1);
-            notDisplay(ary[i][j][0]-sizeXCpt, ary[i][j][1]-sizeYCpt);
+            if (ary[i][j][0]>=sizeXCpt && ary[i][j][0]<= sizeScreenOnX+sizeXCpt && ary[i][j][1]>=sizeYCpt &&ary[i][j][1]<= sizeScreenOnY+sizeYCpt){
+              display(i, ary[i][j][0]-sizeXCpt, ary[i][j][1]-sizeYCpt);
+              notDisplay(ary[i][j][0]-sizeXCpt, ary[i][j][1]-sizeYCpt+1);
+            }
+            else {
+              notDisplay(ary[i][j][0]-sizeXCpt, ary[i][j][1]-sizeYCpt+1);
+            }
           }
         }
       }
@@ -272,8 +287,13 @@ void Position::shiftToBottom(){
           }else if (i ==1 ){
             ary[i][j][1] --;
           }else{
-            display(i, ary[i][j][0]-sizeXCpt, ary[i][j][1]-sizeYCpt+1);
-            notDisplay(ary[i][j][0]-sizeXCpt, ary[i][j][1]-sizeYCpt);
+            if (ary[i][j][0]>=sizeXCpt && ary[i][j][0]<= sizeScreenOnX+sizeXCpt && ary[i][j][1]>=sizeYCpt &&ary[i][j][1]<= sizeScreenOnY+sizeYCpt){
+              display(i, ary[i][j][0]-sizeXCpt, ary[i][j][1]-sizeYCpt);
+              notDisplay(ary[i][j][0]-sizeXCpt, ary[i][j][1]-sizeYCpt-1);
+            }
+            else {
+              notDisplay(ary[i][j][0]-sizeXCpt, ary[i][j][1]-sizeYCpt-1);
+            }
           }
         }
       }
@@ -282,18 +302,18 @@ void Position::shiftToBottom(){
   }
 }
 void Position::manualShift(){
-  // if (ary[0][0][0]-sizeXCpt>1){
-  //   shiftToLeft(); 
-  // }
-  // if (ary[0][0][0]-sizeXCpt<1){
-  //   shiftToRight(); 
-  // }
+  if (ary[0][0][0]-sizeXCpt>1){
+    shiftToLeft(); 
+  }
+  if (ary[0][0][0]-sizeXCpt<1){
+    shiftToRight(); 
+  }
   if (ary[0][0][1]-sizeYCpt>2){
       shiftToTop(); 
     }
-  // if (ary[0][0][1]-sizeYCpt<2){
-  //   shiftToBottom(); 
-  // }
+  if (ary[0][0][1]-sizeYCpt<2){
+    shiftToBottom(); 
+  }
 }
 
 

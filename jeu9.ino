@@ -11,13 +11,12 @@ void setup()
 {
   mesParametres.initialisation(hero,mechant,obstacle,key,door,life,trap,arrow); 
   mesPositions.generatePosition(1,1,1,1,1,1,1,1,1,1,1,1); 
-  mesPositions.setSize(25,5);
+  mesPositions.setSize(25,10);
   mesPositions.typeZelda(); 
 }
 void loop()
 {
-  delay(1000);
-  mesPositions.shiftToLeft();
+  mesPositions.manualShift();
   
   monHero.move();
   
