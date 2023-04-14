@@ -1,0 +1,49 @@
+
+  {
+    "version": 1,
+    "author": "Association Novamake",
+    "editor": "wokwi",
+    "parts": [
+      { "type": "wokwi-arduino-mega", "id": "mega", "top": -195.93, "left": -320.36, "attrs": {} },
+      {
+        "type": "wokwi-lcd2004",
+        "id": "lcd1",
+        "top": -310.9,
+        "left": 70.34,
+        "attrs": { "pins": "i2c" }
+      },
+      {
+        "type": "wokwi-analog-joystick",
+        "id": "joystick1",
+        "top": -117,
+        "left": 81.67,
+        "attrs": {}
+      }
+    ],
+    "connections": [
+      [ "lcd1:GND", "maga:GND.2", "black", [ "h-57.2", "v163.17", "h114.49" ] ],
+      [ "lcd1:VCC", "maga:5V", "red", [ "h-13.98", "v145.49", "h127.34", "v133.76", "h-56.66" ] ],
+      [ "lcd1:SDA", "maga:A4", "green", [ "h0" ] ],
+      [ "lcd1:SCL", "maga:A5", "green", [ "h9.39", "v260.25", "h16.94" ] ],
+      [ "joystick1:VCC", "maga:5V", "red", [ "v27.16", "h-139.27" ] ],
+      [ "joystick1:VERT", "maga:A0", "green", [ "v41.82", "h-224.49", "v-6.17" ] ],
+      [ "joystick1:HORZ", "maga:A1", "green", [ "v51.08", "h-225.6", "v1.54" ] ],
+      [
+        "joystick1:GND",
+        "maga:GND.2",
+        "black",
+        [ "v20.21", "h56.13", "v-142.75", "h-158.96", "v60.19", "h-4.63" ]
+      ],
+      [ "joystick1:SEL", "maga:2", "green", [ "v63", "h-178.48", "v-2.4" ] ],
+      [ "lcd1:SCL", "mega:21", "green", [ "h0" ] ],
+      [ "lcd1:SDA", "mega:20", "green", [ "h0" ] ],
+      [ "lcd1:GND", "mega:GND.2", "black", [ "h0" ] ],
+      [ "lcd1:VCC", "mega:5V", "red", [ "h0" ] ],
+      [ "joystick1:VCC", "mega:5V", "red", [ "v15.93", "h-284.3" ] ],
+      [ "joystick1:VERT", "mega:A0", "green", [ "v31.5", "h-230.37" ] ],
+      [ "joystick1:HORZ", "mega:A1", "green", [ "v43.83", "h-245.81" ] ],
+      [ "joystick1:SEL", "mega:2", "green", [ "v55.57", "h-225.83" ] ],
+      [ "joystick1:GND", "mega:GND.2", "black", [ "v6.87", "h-310.84" ] ]
+    ],
+    "dependencies": {}
+  }
