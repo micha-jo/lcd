@@ -13,11 +13,15 @@ class Parametre
     int verticale; 
     int bouton;
      
-    //déclaration des variables pour les appuis long 
-    int _pressStart; 
-    bool _buttonPressed ;
+  //initialisation des variables pour les  bouton 
+  //appui unique 
+  bool _stateButton;
+  //appui long 
+  bool _buttonPressed; 
+  int _pressStart; 
 
     long timeCpt; //pour les deplacement des mechant et du hero 
+    long timeCpt1; //saut du hero
     long timeCpt2;  //pour les tirs du hero 
     long timeCpt3; //pour les tirs du mechant 
     long timeCpt4; //pour les tirs du mechant 
@@ -34,6 +38,7 @@ class Parametre
     bool boutonRight(); 
     bool boutonTop(); 
     bool boutonBottom(); 
+    bool boutonMonostable(); 
     bool boutonShortPress(); 
     bool specialMoveLeft(); 
     bool specialMoveRight (); 
@@ -76,28 +81,45 @@ class Position: virtual public Parametre
     void shiftToRight (); 
     void shiftToTop (); 
     void shiftToBottom (); 
-    void manualShift(); 
+    void manualShift(int x, int y ); 
+    void manualShiftBorder(); 
     void infinite(); 
 
     bool noCharacterLeft(int id , int number, int numberOfObstacle); 
     bool noCharacterRight(int id , int number, int numberOfObstacle); 
+    bool noCharacterTwoRight(int id , int number, int numberOfObstacle); 
     bool noCharacterTop(int id , int number, int numberOfObstacle); 
     bool noCharacterBottom(int id , int number, int numberOfObstacle); 
     
 };
 
 
-class Hero: virtual public Parametre
+class Hero: public Parametre
 {
   protected:
     Position *position;
-     
     
   public:
     int id;
     int number;
+
     int heroSpeedOnX; 
     int heroSpeedOnY; 
+    int heroJumpSpeed; 
+    int heroFireSpeed; 
+
+    bool fire; 
+    int direction; 
+
+    int numberOfLife; 
+    int numberOfMonster; 
+    int numberOfKey; 
+    int numberOfdoor; 
+    int numberOfArrow; 
+    int numberOfEqual;
+    int numberOfMinus; 
+    int numberOfCoin; 
+    int numberOfLevel; 
 
     Hero(Position *position); 
 
@@ -107,8 +129,60 @@ class Hero: virtual public Parametre
     void goRight(); 
     void goTop(); 
     void goBottom(); 
+    void moveLeftRight(); 
     void move(); 
+    void jumpForward(bool (Hero::*callback)());
+    void jumpForwardWithRequest(int request);
+    void jump(bool (Hero::*callback)());
+    void jumpWithRequest(int request);
+    void pull(bool (Hero::*callback)());
+    void pullWithRequest(int request);
+
+    //reste a faire
+    void protect(bool (Hero::*callback)());
+    void protectedWithRequest(int request);
+    void kick(bool (Hero::*callback)());
+    void kickWithRequest(int request);
+
+    void interaction(); 
+    void concequencies(); 
 };
+
+
+class Mechant: public Parametre
+{
+  protected:
+    Position *position;
+    
+  public:
+    Mechant **arrayOfMechants;
+
+    int id;
+    int number;
+
+    int mechantSpeedOnX; 
+    int mechantSpeedOnY; 
+    int mechantJumpSpeed; 
+    int mechantFireSpeed; 
+
+    bool fire; 
+    int direction; 
+    
+    Mechant(Position *position); 
+    Mechant(Position *position, int number); 
+    void createMechant(); 
+    void allMechant(void (Mechant::*callback)()); 
+};
+
+
+class SecondaryScreen: virtual public Parametre
+{
+  protected: 
+    Hero *hero;
+  public: 
+    SecondaryScreen(Hero *hero);
+    void displaySecondaryScreen(int i);  
+}; 
 
 
 
