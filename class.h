@@ -32,7 +32,7 @@ class Parametre
     void initialisation(uint8_t *hero, uint8_t *mechant, uint8_t *obstacle, uint8_t *key, uint8_t *door, uint8_t *life,uint8_t *trap, uint8_t *arrow);
     
     void display(int id, int x, int y); 
-    void notDisplay( int x, int y);
+    void notDisplay( int x, int y); 
 
     bool boutonLeft(); 
     bool boutonRight(); 
@@ -123,6 +123,9 @@ class Hero: public Parametre
 
     Hero(Position *position); 
 
+    bool getFire(); 
+
+    void setFireFalse();
     void setHeroSpeed(int speendOnX, int speedOnY);
     
     void goLeft(); 
@@ -159,6 +162,9 @@ class Mechant: public Parametre
 
     int id;
     int number;
+    
+    int numberOfLife;
+    int numberOfMinus;  
 
     int mechantSpeedOnX; 
     int mechantSpeedOnY; 
@@ -167,13 +173,98 @@ class Mechant: public Parametre
 
     bool fire; 
     int direction; 
+
+    int timingOfMove; 
     
     Mechant(Position *position); 
     Mechant(Position *position, int number); 
+    
+    bool getFire(); 
+
+    void setFireFalse();
+
     void createMechant(); 
-    void allMechant(void (Mechant::*callback)()); 
+    void allMechants(void (Mechant::*callback)()); 
+    bool noElementLeft();
+    bool noElementRight();
+    bool noElementTop();
+    bool noElementBottom();
+    void goRight(); 
+    void goLeft(); 
+    void goTop(); 
+    void goBottom(); 
+    void goRandom();
+
+    void leftToRight(); 
+    void topToBottom(); 
+    void circle(); 
+    void eight(); 
+    void chassing();
+
+    void pullFront(); 
+    void pullBack(); 
+    void pullOn();  
+    void pullUnder(); 
+
+    void concequencies();   
 };
 
+
+class Bullet: public Parametre
+{
+  protected: 
+    
+    int _direction; 
+    Position *position;
+    int _charToDisplay ; 
+    
+  public: 
+    int _x;
+    int _y; 
+    Bullet(Position *position); 
+    void inProgress(int character); 
+    int element(); 
+    int targetNotReach(bool breakObstacle); 
+    void completed();
+    
+     
+}; 
+
+class MinusBullet:  public Bullet
+{
+  public:
+    MinusBullet(int x, int y , int direction,Position *position);
+    
+};
+class EqualBullet:  public Bullet
+{
+  public:
+    EqualBullet(int x, int y , int direction,Position *position);
+};
+class ArrowBullet:  public Bullet
+{
+  public:
+    ArrowBullet(int x, int y , int direction,Position *position);
+};
+
+class Shot: virtual public Parametre
+{
+  protected: 
+    Position *position;
+    Hero *hero;
+    Mechant *mechant;
+    ArrowBullet *arrowBullet;
+    EqualBullet *equalBullet;
+    MinusBullet *minusBullet;
+    MinusBullet *bulletOfMechant;
+    int _speed ;
+  public: 
+    Shot(Position *position, Hero *hero, Mechant *mechant);
+    void 	initializeShot(); 
+    void onlyHeroShot(); 
+    void onlyMechantShot(); 
+    void consequencies(int numberOfTheTarget, int TypeOfBullet); 
+}; 
 
 class SecondaryScreen: virtual public Parametre
 {
