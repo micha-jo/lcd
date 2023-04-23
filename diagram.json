@@ -1,7 +1,7 @@
 
   {
     "version": 1,
-    "author": "Association Novamake",
+    "author": "Association",
     "editor": "wokwi",
     "parts": [
       { "type": "wokwi-arduino-mega", "id": "mega", "top": -195.93, "left": -320.36, "attrs": {} },
