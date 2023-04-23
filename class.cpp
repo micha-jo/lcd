@@ -480,7 +480,7 @@ void Position::infinite(){
 //CHECKED NEXT CHARACTER: renvoie true si la case d'à coter est vide
 bool Position::noCharacterLeft(int id , int number, int numberOfObstacle){
   for (int i =0; i < numberOfEatchCaractere[numberOfObstacle]; i++){
-    if ((ary[id][number][0]-1==ary[numberOfObstacle][i][0])&&(ary[id][number][1]==ary[numberOfObstacle][i][1])&&ary[numberOfObstacle][i][2]>0){
+    if ((ary[id][number][0]-1==ary[numberOfObstacle][i][0])&&(ary[id][number][1]==ary[numberOfObstacle][i][1])&&ary[numberOfObstacle][i][2]==1){
       return false ; 
     }
   }
@@ -488,7 +488,7 @@ bool Position::noCharacterLeft(int id , int number, int numberOfObstacle){
 }
 bool Position::noCharacterRight(int id , int number, int numberOfObstacle){
   for (int i =0; i < numberOfEatchCaractere[numberOfObstacle]; i++){
-    if ((ary[id][number][0]+1==ary[numberOfObstacle][i][0])&&(ary[id][number][1]==ary[numberOfObstacle][i][1])&&ary[numberOfObstacle][i][2]>0){
+    if ((ary[id][number][0]+1==ary[numberOfObstacle][i][0])&&(ary[id][number][1]==ary[numberOfObstacle][i][1])&&ary[numberOfObstacle][i][2]==1){
       return false ; 
     }
   }
@@ -496,7 +496,7 @@ bool Position::noCharacterRight(int id , int number, int numberOfObstacle){
 }
 bool Position::noCharacterTwoRight(int id , int number, int numberOfObstacle){
   for (int i =0; i < numberOfEatchCaractere[numberOfObstacle]; i++){
-    if ((ary[id][number][0]+2==ary[numberOfObstacle][i][0])&&(ary[id][number][1]==ary[numberOfObstacle][i][1])&&ary[numberOfObstacle][i][2]>0){
+    if ((ary[id][number][0]+2==ary[numberOfObstacle][i][0])&&(ary[id][number][1]==ary[numberOfObstacle][i][1])&&ary[numberOfObstacle][i][2]==1){
       return false ; 
     }
   }
@@ -504,7 +504,7 @@ bool Position::noCharacterTwoRight(int id , int number, int numberOfObstacle){
 }
 bool Position::noCharacterTop(int id , int number, int numberOfObstacle){
   for (int i =0; i < numberOfEatchCaractere[numberOfObstacle]; i++){
-    if ((ary[id][number][0]==ary[numberOfObstacle][i][0])&&(ary[id][number][1]-1==ary[numberOfObstacle][i][1])&&ary[numberOfObstacle][i][2]>0){
+    if ((ary[id][number][0]==ary[numberOfObstacle][i][0])&&(ary[id][number][1]-1==ary[numberOfObstacle][i][1])&&ary[numberOfObstacle][i][2]==1){
       return false ; 
     }
   }
@@ -512,7 +512,7 @@ bool Position::noCharacterTop(int id , int number, int numberOfObstacle){
 }
 bool Position::noCharacterBottom(int id , int number, int numberOfObstacle){
   for (int i =0; i < numberOfEatchCaractere[numberOfObstacle]; i++){
-    if ((ary[id][number][0]==ary[numberOfObstacle][i][0])&&(ary[id][number][1]+1==ary[numberOfObstacle][i][1])&&ary[numberOfObstacle][i][2]>0){
+    if ((ary[id][number][0]==ary[numberOfObstacle][i][0])&&(ary[id][number][1]+1==ary[numberOfObstacle][i][1])&&ary[numberOfObstacle][i][2]==1){
       return false ; 
     }
   }
@@ -767,7 +767,7 @@ void Hero::interaction(){
 
             for (int k =0 ; k < 12; k ++ ){
               for (int l = 0 ; l < position->numberOfEatchCaractere[k]; l ++ ){
-                if (position->ary[k][l][0]>=position->sizeXCpt && position->ary[k][l][0]<= sizeScreenOnX+position->sizeXCpt &&position->ary[k][l][1]>=position->sizeYCpt && position->ary[k][l][1]<= sizeScreenOnY+position->sizeYCpt && position->ary[k][l][2]>=1){
+                if (position->ary[k][l][0]>=position->sizeXCpt && position->ary[k][l][0]<= sizeScreenOnX+position->sizeXCpt &&position->ary[k][l][1]>=position->sizeYCpt && position->ary[k][l][1]<= sizeScreenOnY+position->sizeYCpt && position->ary[k][l][2]>0){
                   display(k, position->ary[k][l][0], position->ary[k][l][1] );
                 }
               }
@@ -804,7 +804,7 @@ void Hero::interaction(){
 
           for (int k =0 ; k < 12; k ++ ){
               for (int l = 0 ; l < position->numberOfEatchCaractere[k]; l ++ ){
-                if (position->ary[k][l][0]>=position->sizeXCpt && position->ary[k][l][0]<= sizeScreenOnX+position->sizeXCpt &&position->ary[k][l][1]>=position->sizeYCpt && position->ary[k][l][1]<= sizeScreenOnY+position->sizeYCpt && position->ary[k][l][2]>=1){
+                if (position->ary[k][l][0]>=position->sizeXCpt && position->ary[k][l][0]<= sizeScreenOnX+position->sizeXCpt &&position->ary[k][l][1]>=position->sizeYCpt && position->ary[k][l][1]<= sizeScreenOnY+position->sizeYCpt && position->ary[k][l][2]>0){
                   display(k, position->ary[k][l][0], position->ary[k][l][1] );
                 }
               }
@@ -847,29 +847,31 @@ void Hero::concequencies(){
   }
 }
 //END INTERACTION
+
+
 /******************************Mechant********************************/
 Mechant::Mechant(Position *position) {
   this->position = position; 
   id = 1; 
   number = 0; 
-  mechantSpeedOnX = 400; 
-  mechantSpeedOnY = 400;
+  mechantSpeedOnX = 800; 
+  mechantSpeedOnY = mechantSpeedOnX;
   mechantJumpSpeed = 300;
-
+  numberOfLife = 1;  
   fire = false; 
-
+  numberOfMinus=5;
   timingOfMove = 0; 
 }
 Mechant::Mechant(Position *position, int number) {
   this->position = position; 
   id = 1; 
-  this->number = number; 
+  this->number = number;
   mechantSpeedOnX = 400; 
-  mechantSpeedOnY = 400;
+  mechantSpeedOnY = mechantSpeedOnX;
   mechantJumpSpeed = 300;
-
+  numberOfLife = 3;  
   fire = false; 
-
+  numberOfMinus=5;
   timingOfMove = 0; 
 }
 
@@ -922,11 +924,11 @@ bool Mechant::noElementBottom(){
 // Méthode pour faire déplacer le méchant vers la gauche
 void Mechant::goLeft(){
   // Vérification du temps écoulé depuis le dernier déplacement
-  if (millis()> timeCpt + mechantSpeedOnX){
+  if (millis()> timeCpt + mechantSpeedOnX && position->ary[this->id][this->number][2]==1){
     // Vérification qu'il n'y a pas d'élément à gauche du méchant
     if (noElementLeft()){
-      // Vérification que le méchant est bien dans les limites de l'écran et qu'il est actif
-      if (position->ary[this->id][this->number][0]>=position->sizeXCpt && position->ary[this->id][this->number][0]<= sizeScreenOnX+position->sizeXCpt &&position->ary[this->id][this->number][1]>=position->sizeYCpt && position->ary[this->id][this->number][1]<= sizeScreenOnY+position->sizeYCpt && position->ary[this->id][this->number][2]>0){
+      // Vérification que le méchant est bien dans les limites de l'écran
+      if (position->ary[this->id][this->number][0]>=position->sizeXCpt && position->ary[this->id][this->number][0]<= sizeScreenOnX+position->sizeXCpt &&position->ary[this->id][this->number][1]>=position->sizeYCpt && position->ary[this->id][this->number][1]<= sizeScreenOnY+position->sizeYCpt){
         // Affichage du méchant à sa nouvelle position à gauche
         display(this->id, position->ary[this->id][this->number][0]-1-position->sizeXCpt, position->ary[this->id][this->number][1]-position->sizeYCpt);
         // Suppression du méchant à sa position précédente
@@ -949,7 +951,7 @@ void Mechant::goLeft(){
   }
 }
 void Mechant::goRight(){
-  if (millis()> timeCpt + mechantSpeedOnX){
+  if (millis()> timeCpt + mechantSpeedOnX && position->ary[this->id][this->number][2]==1){
     if (noElementRight()){
       if (position->ary[this->id][this->number][0]>=position->sizeXCpt && position->ary[this->id][this->number][0]<= sizeScreenOnX+position->sizeXCpt &&position->ary[this->id][this->number][1]>=position->sizeYCpt && position->ary[this->id][this->number][1]<= sizeScreenOnY+position->sizeYCpt && position->ary[this->id][this->number][2]>0){
         display(this->id, position->ary[this->id][this->number][0]+1-position->sizeXCpt, position->ary[this->id][this->number][1]-position->sizeYCpt); 
@@ -968,7 +970,7 @@ void Mechant::goRight(){
   }
 }
 void Mechant::goTop(){
-  if (millis()> timeCpt + mechantSpeedOnY){
+  if (millis()> timeCpt + mechantSpeedOnY && position->ary[this->id][this->number][2]==1){
     if (noElementTop()){
       if (position->ary[this->id][this->number][0]>=position->sizeXCpt && position->ary[this->id][this->number][0]<= sizeScreenOnX+position->sizeXCpt &&position->ary[this->id][this->number][1]>=position->sizeYCpt && position->ary[this->id][this->number][1]<= sizeScreenOnY+position->sizeYCpt && position->ary[this->id][this->number][2]>0){
         
@@ -995,7 +997,7 @@ void Mechant::goTop(){
   }
 }
 void Mechant::goBottom(){
-  if (millis()> timeCpt + mechantSpeedOnY){
+  if (millis()> timeCpt + mechantSpeedOnY && position->ary[this->id][this->number][2]==1){
     if (noElementBottom()){
       if (position->ary[this->id][this->number][0]>=position->sizeXCpt && position->ary[this->id][this->number][0]<= sizeScreenOnX+position->sizeXCpt &&position->ary[this->id][this->number][1]>=position->sizeYCpt && position->ary[this->id][this->number][1]<= sizeScreenOnY+position->sizeYCpt && position->ary[this->id][this->number][2]>0){
         
@@ -1070,7 +1072,7 @@ void Mechant::topToBottom(){
 }
 
 void Mechant::circle(){
-  timingOfMove == 0;
+  
   switch(timingOfMove){
     case 0:
       goBottom(); 
@@ -1200,7 +1202,14 @@ void Mechant::pullUnder(){
 }
 //END PULL
 
-
+void Mechant::concequencies(){
+  for (int j = 0 ; j< position->numberOfEatchCaractere[1]; j++){
+    if (numberOfLife<=0 && position->ary[1][j][2] == 1 ){
+      position->ary[1][j][2] =2;
+      display(11, position->ary[1][j][0],position->ary[1][j][1]);
+    }
+  }
+}
 
 /*
 *MECHANTS: créé un tableau de mechant 
@@ -1226,7 +1235,12 @@ void Mechant::allMechants(void (Mechant::*callback)()) {
 
 
 /********************************Shot**************************************************/
-/*
+Shot::Shot(Position *position, Hero *hero, Mechant *mechant)  {
+  this->position = position; 
+  this->hero = hero; 
+  this->mechant = mechant; 
+  
+}
 
 Bullet::Bullet(Position *position)  {
   this->position = position; 
@@ -1234,172 +1248,71 @@ Bullet::Bullet(Position *position)  {
 ArrowBullet::ArrowBullet(int x, int y , int direction,Position *position): Bullet(position){
   _x =x; 
   _y = y; 
-  _direction = direction;
+  dir = direction;
+  arrowSpeed = 200;
   this->position = position; 
+  
 }
 EqualBullet::EqualBullet(int x, int y , int direction,Position *position): Bullet(position){
   _x =x; 
   _y = y; 
-  _direction = direction;
+  dir = direction;
+  equalSpeed = 200;
   this->position = position;  
 }
 MinusBullet::MinusBullet(int x, int y , int direction,Position *position): Bullet(position){
   _x =x; 
   _y = y; 
-  _direction = direction;
+  dir = direction;
+  minusSpeed = 200;
   this->position = position; 
-}
-Shot::Shot(Position *position, Hero *hero, Mechant *mechant)  {
-  this->position = position; 
-  this->hero = hero; 
-  this->mechant = mechant; 
-  _speed =200;
 }
 
+// Définition de la méthode element de la classe Bullet
 int Bullet::element(){
+  // Boucle sur les 12 caractères différents possibles
   for (int i = 0; i < 12 ; i++){
+    // Boucle sur les positions de chaque caractère
     for (int j = 0 ; j< position->numberOfEatchCaractere[i]; j++){
-      if (_x == position->ary[i][j][0]&& _y == position->ary[i][j][1]&&position->ary[i][j][2]==1){
+      // Si la position actuelle de la balle correspond à la position d'un caractère activé dans le tableau position
+      if (this->_x == position->ary[i][j][0]&& this->_y == position->ary[i][j][1]&&position->ary[i][j][2]==1){
+        // Retourne l'indice du caractère correspondant
         return  i; 
       }
-      if (_x == position->ary[i][j][0]&& _y == position->ary[i][j][1]&&position->ary[i][j][2]==2){
+      // Si la position actuelle de la balle correspond à la position d'un caractère désactivé "blanc" dans le tableau position
+      if (this->_x == position->ary[i][j][0]&& this->_y == position->ary[i][j][1]&&position->ary[i][j][2]==2){
+        // Retourne l'indice de caractère blanc (11)
         return  11; 
       }
     }
   }
-  return 12; 
+  // Si la balle ne correspond à aucune position connue, retourne 14
+  return 14; 
 }
 
-void Bullet::inProgress( int character ){
-  
-  int characterToDisplay; 
-  switch (this->_direction)
-  {
-  case 0:
-    display(character, _x-1, _y);
-    characterToDisplay = element();
-    if (characterToDisplay == 2)
-    {
-      characterToDisplay = 11;
-      for (int i = 0; i< position->numberOfEatchCaractere[2]; i ++){
-        if (position->ary[2][i][0] == _x && position->ary[2][i][1] == _y){
-          position->ary[2][i][2] =2;
-        }
-      }
+void  Bullet::displayStar(){
+  for (int i = 0; i< position->numberOfEatchCaractere[2]; i ++){
+    if (position->ary[2][i][0] == _x && position->ary[2][i][1] == _y){
+      position->ary[2][i][2] =2;
     }
-    display(characterToDisplay, _x,_y);
-    _x --;  
-    break;
-  case 1:
-    display(character, _x+1, _y);
-    characterToDisplay = element();
-    if (characterToDisplay == 2)
-    {
-      characterToDisplay = 11;
-      for (int i = 0; i< position->numberOfEatchCaractere[2]; i ++){
-        if (position->ary[2][i][0] == _x && position->ary[2][i][1] == _y){
-          position->ary[2][i][2] =2;
-        }
-      }
-    }
-    display(characterToDisplay, _x,_y);
-    _x ++;  
-    break;
-  case 2:
-    display(character, _x, _y-1);
-    characterToDisplay = element();
-    if (characterToDisplay == 2)
-    {
-      characterToDisplay = 11;
-      for (int i = 0; i< position->numberOfEatchCaractere[2]; i ++){
-        if (position->ary[2][i][0] == _x && position->ary[2][i][1] == _y){
-          position->ary[2][i][2] =2;
-        }
-      }
-    }
-    display(characterToDisplay, _x,_y);
-    _y --;  
-    break;
-  case 3:
-    display(character, _x, _y+1);
-    characterToDisplay = element();
-    if (characterToDisplay == 2)
-    {
-      characterToDisplay = 11;
-      for (int i = 0; i< position->numberOfEatchCaractere[2]; i ++){
-        if (position->ary[2][i][0] == _x && position->ary[2][i][1] == _y){
-          position->ary[2][i][2] =2;
-          
-        }
-      }
-    }
-    display(characterToDisplay, _x,_y);
-    _y ++; 
-    break;
-     
-  default:
-    break;
   }
+  display(11, _x-position->sizeXCpt,_y-position->sizeYCpt);
 }
 
-
-int Bullet::targetNotReach(bool breakObstacle){
-  int end;
-  if (breakObstacle){end = 2;}else{end = 3;}
-
-  switch (_direction)
+int Bullet::direction (){
+  switch (dir)
   {
   case 0:
-    for (int i = 0; i < end ; i++){
-      for (int j = 0 ; j< position->numberOfEatchCaractere[i]; j++){
-        if (_x == position->ary[i][j][0]&& _y == position->ary[i][j][1]&&position->ary[i][j][2]==1){
-          return  i;
-        }
-        else if (_x<= 0){
-          return -2; 
-        }
-      }
-    }
-    return -1; 
+    return -1 ; 
     break;
   case 1:
-    for (int i = 0; i < end ; i++){
-      for (int j = 0 ; j< position->numberOfEatchCaractere[i]; j++){
-        if (_x == position->ary[i][j][0]&& _y == position->ary[i][j][1]&&position->ary[i][j][2]==1){
-          return i;
-        }
-        else if (_x>= position->sizeX){
-          return -2; 
-        }
-      }
-    }
-    return -1; 
+    return 1 ; 
     break;
   case 2:
-    for (int i = 0; i < end ; i++){
-      for (int j = 0 ; j< position->numberOfEatchCaractere[i]; j++){
-        if (_x == position->ary[i][j][0]&& _y == position->ary[i][j][1]&&position->ary[i][j][2]==1){
-          return i;
-        }
-        else if (_y<= 0){
-          return -2; 
-        }
-      }
-    }
-    return -1; 
+    return -1 ; 
     break;
   case 3:
-    for (int i = 0; i < end ; i++){
-      for (int j = 0 ; j< position->numberOfEatchCaractere[i]; j++){
-        if (_x == position->ary[i][j][0]&& _y == position->ary[i][j][1]&&position->ary[i][j][2]==1){
-          return i;
-        }
-        else if (_y>= position->sizeY){
-          return -2; 
-        }
-      }
-    }
-    return -1; 
+    return 1 ; 
     break;
   
   default:
@@ -1407,248 +1320,314 @@ int Bullet::targetNotReach(bool breakObstacle){
   }
 }
 
-void Bullet::completed(){
-  switch (this->_direction)
+//numberOfCharacterLimite = 2 pour arrow et 3 pour equal et minus 
+bool Bullet::canProgress(int numberOfCharacterLimite, int numberCharacterNoChecked){ 
+  switch (dir)
   {
   case 0:
-    display(element(), _x,_y);
-    _x --;  
+    if ((element()<numberOfCharacterLimite && element()!=numberCharacterNoChecked)|| _x< position->sizeXCpt){
+    return false; 
+    }
     break;
   case 1:
-    display(element(), _x,_y);
-    _x ++;  
+    if ((element()<numberOfCharacterLimite && element()!=numberCharacterNoChecked)|| _x> position->sizeXCpt+sizeScreenOnX){
+    return false; 
+    }
     break;
   case 2:
-    display(element(), _x,_y);
-    _y --;  
+    if ((element()<numberOfCharacterLimite && element()!=numberCharacterNoChecked)|| _y< position->sizeYCpt){
+    return false; 
+    } 
     break;
   case 3:
-    display(element(), _x,_y);
-    _y ++; 
+    if ((element()<numberOfCharacterLimite && element()!=numberCharacterNoChecked)|| _y> position->sizeYCpt+sizeScreenOnY){
+    return false; 
+    }
     break;
-     
-  default:
-    break;
+   
+  }   
+  return true; 
+}
+void Shot::bulletReachHero(){
+  hero->numberOfLife --;
+            
+  position->ary[hero->id][hero->number][0]=0;
+  position->ary[hero->id][hero->number][1]=0;
+  position->sizeXCpt = 0; 
+  position->sizeYCpt = 0; 
+  lcd.clear(); 
+
+  for (int k =0 ; k < 12; k ++ ){
+    for (int l = 0 ; l < position->numberOfEatchCaractere[k]; l ++ ){
+      if (position->ary[k][l][0]>=position->sizeXCpt && position->ary[k][l][0]<= sizeScreenOnX+position->sizeXCpt &&position->ary[k][l][1]>=position->sizeYCpt && position->ary[k][l][1]<= sizeScreenOnY+position->sizeYCpt && position->ary[k][l][2]>0){
+        display(k, position->ary[k][l][0]-position->sizeXCpt, position->ary[k][l][1]-position->sizeYCpt );
+      }
+    }
   }
 }
-void Shot::consequencies(int numberOfTheTarget, int TypeOfBullet){
-  
- switch (numberOfTheTarget)
- 
+void ArrowBullet::go() {
+  // Vérifie la direction de la balle
+  if (dir == 2 || dir == 3) { // Si la direction est vers le haut ou vers le bas
+    // Affiche la balle à sa nouvelle position verticale
+    display(7, _x-position->sizeXCpt, _y + direction()-position->sizeYCpt); 
+    // Récupère l'élément (ennemi ou obstacle) sur lequel la balle va arriver
+    int characterToDisplay = element();
+    // Si l'élément est une étoile
+    if (characterToDisplay == 2) {
+      // Affiche l'étoile à la nouvelle position
+      displayStar(); 
+    } else {
+      // Sinon, affiche l'élément normal à la nouvelle position
+      display(characterToDisplay, _x-position->sizeXCpt, _y-position->sizeYCpt);
+    }
+    // Met à jour la position verticale de la balle
+    _y = _y + direction();
+  } else { // Si la direction est vers la gauche ou vers la droite
+    // Affiche la balle à sa nouvelle position horizontale
+    display(7, _x-position->sizeXCpt + direction(), _y-position->sizeYCpt);
+    // Récupère l'élément (ennemi ou obstacle) sur lequel la balle va arriver
+    int characterToDisplay = element();
+    // Si l'élément est une étoile
+    if (characterToDisplay == 2) {
+      // Affiche l'étoile à la nouvelle position
+      displayStar(); 
+    } else {
+      // Sinon, affiche l'élément normal à la nouvelle position
+      display(characterToDisplay, _x-position->sizeXCpt, _y-position->sizeYCpt);
+    }
+    // Met à jour la position horizontale de la balle
+    _x = _x + direction();
+  }
+}
+
+void  EqualBullet::go(){
+  if (dir == 2 || dir ==3){
+    display(8, _x-position->sizeXCpt, _y+direction());
+    display(element(), _x-position->sizeXCpt,_y-position->sizeYCpt);
+    _y = _y +direction();
+  }
+  else{
+    display(8, _x+direction(), _y-position->sizeYCpt);
+    display(element(), _x-position->sizeXCpt,_y-position->sizeYCpt);
+    _x = _x +direction();
+  } 
+}
+void MinusBullet::go() {
+  if (dir >1) {
+    display(9, _x-position->sizeXCpt, _y-position->sizeYCpt + direction());
+    display(element(), _x-position->sizeXCpt, _y-position->sizeYCpt);
+    _y += direction();
+  }
+  else {
+    display(9, _x + direction()-position->sizeXCpt, _y-position->sizeYCpt);
+    display(element(), _x-position->sizeXCpt, _y-position->sizeYCpt);
+    _x += direction();
+  }
+}
+
+void Shot::consequenciesArrow(){
+  switch (arrowBullet->element()){
+    case 0: 
+      bulletReachHero(); 
+      break; 
+    case 1: 
+      display(arrowBullet->element(), arrowBullet->_x-position->sizeXCpt, arrowBullet->_y-position->sizeYCpt);
+      for (int j = 0 ; j< position->numberOfEatchCaractere[1]; j++){
+        if (arrowBullet->_x == position->ary[1][j][0]&& arrowBullet->_y == position->ary[1][j][1]){
+          mechant->numberOfLife -- ;
+        }
+      }
+      break; 
+  }
+}
+void Shot::consequenciesEqual(){
+  switch (equalBullet->element()){
+    case 0: 
+      bulletReachHero();
+      break; 
+    case 1: 
+      display(equalBullet->element(), equalBullet->_x-position->sizeXCpt, equalBullet->_y-position->sizeYCpt);
+      for (int j = 0 ; j< position->numberOfEatchCaractere[1]; j++){
+        if (equalBullet->_x == position->ary[1][j][0]&& equalBullet->_y == position->ary[1][j][1]){
+          mechant->numberOfLife = mechant->numberOfLife -2 ;
+        }
+      }
+      break; 
+    case 2: 
+      display(minusBullet->element(), minusBullet->_x, minusBullet->_y);
+      break; 
+  }
+}
+void Shot::consequenciesMinus(){
+  switch (minusBullet->element()){
+    case 0: 
+      bulletReachHero();
+      break; 
+    case 1: 
+      display(minusBullet->element(), minusBullet->_x-position->sizeXCpt, minusBullet->_y-position->sizeYCpt);
+      for (int j = 0 ; j< position->numberOfEatchCaractere[1]; j++){
+        if (minusBullet->_x == position->ary[1][j][0]&& minusBullet->_y == position->ary[1][j][1]){
+          mechant->numberOfLife -- ;
+        }
+      }
+      break; 
+    case 2: 
+      display(minusBullet->element(), minusBullet->_x, minusBullet->_y);
+      break; 
+  }
+}
+
+int Shot::typeOfMunition(){
+  if (hero->getFire() && !ongoing ){
+    if (hero->numberOfArrow>0){
+      ongoing = true; 
+      return 1; 
+    }else if (hero->numberOfEqual>0 ){
+      ongoing = true; 
+      return 2 ;
+    }else if (hero->numberOfMinus >0 ){
+      ongoing = true; 
+      return 3; 
+    }
+    ongoing = false;
+    return 0; 
+  }
+}
+
+void Shot::arrowShot(int numberCharacterNoChecked ){
+  // Si la flèche n'a pas encore été créée, la créer avec la position et la direction du héros
+  if (arrowBullet == nullptr){
+    arrowBullet =  new ArrowBullet(position->ary[hero->id][hero->number][0],position->ary[hero->id][hero->number][1], hero->direction,position);
+  }
+  // Si la flèche peut encore avancer, la faire avancer en vérifiant si assez de temps s'est écoulé depuis le dernier déplacement
+  else if (arrowBullet->canProgress(2,numberCharacterNoChecked)){
+    if (millis() > timeCpt3 + arrowBullet->arrowSpeed) { 
+      arrowBullet->go();
+      timeCpt3 = millis(); 
+    }
+  }
+  // Si la flèche ne peut plus avancer, la supprimer et réinitialiser les variables
+  else if (!arrowBullet->canProgress(2,numberCharacterNoChecked)) {
+    hero->numberOfArrow--; // décrémenter le nombre de flèches du héros
+    hero->setFireFalse(); // indiquer que le héros n'est plus en train de tirer
+    delete arrowBullet; // supprimer la flèche
+    arrowBullet = nullptr; // réinitialiser le pointeur à null
+    ongoing = false; // indiquer que le tir est terminé
+  }
+}
+
+void Shot::equalShot(int numberCharacterNoChecked ){
+  if (equalBullet== nullptr){
+    equalBullet =  new EqualBullet(position->ary[hero->id][hero->number][0],position->ary[hero->id][hero->number][1], hero->direction,position );
+  } 
+  else if (equalBullet->canProgress(3,numberCharacterNoChecked)){
+    if (millis() > timeCpt3 + equalBullet->equalSpeed) { 
+      equalBullet->go();
+      timeCpt3 = millis(); 
+    }
+  }
+  else if (!equalBullet->canProgress(3,numberCharacterNoChecked)) {
+    hero->numberOfEqual--; 
+    hero->setFireFalse(); 
+    delete equalBullet;
+    equalBullet = nullptr;
+    ongoing = false;  
+  }
+}
+void Shot::minusShot(int numberCharacterNoChecked ){
+  if (minusBullet== nullptr){
+    minusBullet =  new MinusBullet(position->ary[hero->id][hero->number][0],position->ary[hero->id][hero->number][1], hero->direction,position );
+  } 
+  else if (minusBullet->canProgress(3,numberCharacterNoChecked)){
+    if (millis() > timeCpt3 + minusBullet->minusSpeed) { 
+      minusBullet->go();
+      timeCpt3 = millis(); 
+    }
+  }
+  else if (!minusBullet->canProgress(3,numberCharacterNoChecked)) {
+    consequenciesMinus(); 
+    hero->numberOfMinus--; 
+    hero->setFireFalse(); 
+    delete minusBullet;
+    minusBullet = nullptr;
+    ongoing = false;  
+  }
+}
+
+void Shot::heroShot(){
+ switch (typeOfMunition())
  {
  case 0:
- switch (TypeOfBullet)
-  {
-  case 0:
-    Serial.print ("you died");
-    hero->numberOfLife -- ;
-    position->ary[hero->id][hero->number][0]=0;
-    position->ary[hero->id][hero->number][1]=0;
-    position->sizeXCpt = 0; 
-    position->sizeYCpt = 0; 
-    lcd.clear(); 
-
-    for (int k =0 ; k < 12; k ++ ){
-      for (int l = 0 ; l < position->numberOfEatchCaractere[k]; l ++ ){
-        if (position->ary[k][l][0]>=position->sizeXCpt && position->ary[k][l][0]<= sizeScreenOnX+position->sizeXCpt &&position->ary[k][l][1]>=position->sizeYCpt && position->ary[k][l][1]<= sizeScreenOnY+position->sizeYCpt && position->ary[k][l][2]>=1){
-          display(k, position->ary[k][l][0], position->ary[k][l][1] );
-        }
-      }
-    }
-    arrowBullet->completed(); 
-    break;
-  case 1:
-    Serial.print ("you died");
-    hero->numberOfLife -- ;
-    position->ary[hero->id][hero->number][0]=0;
-    position->ary[hero->id][hero->number][1]=0;
-    position->sizeXCpt = 0; 
-    position->sizeYCpt = 0; 
-    lcd.clear(); 
-
-    for (int k =0 ; k < 12; k ++ ){
-      for (int l = 0 ; l < position->numberOfEatchCaractere[k]; l ++ ){
-        if (position->ary[k][l][0]>=position->sizeXCpt && position->ary[k][l][0]<= sizeScreenOnX+position->sizeXCpt &&position->ary[k][l][1]>=position->sizeYCpt && position->ary[k][l][1]<= sizeScreenOnY+position->sizeYCpt && position->ary[k][l][2]>=1){
-          display(k, position->ary[k][l][0], position->ary[k][l][1] );
-        }
-      }
-    } 
-    equalBullet->completed(); 
-    break;
-  case 2:
-    Serial.print ("you died");
-    hero->numberOfLife --;
-            
-    position->ary[hero->id][hero->number][0]=0;
-    position->ary[hero->id][hero->number][1]=0;
-    position->sizeXCpt = 0; 
-    position->sizeYCpt = 0; 
-    lcd.clear(); 
-
-    for (int k =0 ; k < 12; k ++ ){
-      for (int l = 0 ; l < position->numberOfEatchCaractere[k]; l ++ ){
-        if (position->ary[k][l][0]>=position->sizeXCpt && position->ary[k][l][0]<= sizeScreenOnX+position->sizeXCpt &&position->ary[k][l][1]>=position->sizeYCpt && position->ary[k][l][1]<= sizeScreenOnY+position->sizeYCpt && position->ary[k][l][2]>=1){
-          display(k, position->ary[k][l][0], position->ary[k][l][1] );
-        }
-      }
-    }
-    minusBullet->completed();
-    break;
-  }
+  // Plus de munition 
   break;
  case 1:
-  switch (TypeOfBullet)
-  {
-  case 0:
-    for (int j = 0 ; j< position->numberOfEatchCaractere[1]; j++){
-      if (arrowBullet->_x == position->ary[1][j][0]&& arrowBullet->_y == position->ary[1][j][1]){
-        mechant->numberOfLife -- ;
-      }
+  if (ongoing){
+    arrowShot(0); 
+  }
+  break;
+ case 2:
+  if (ongoing){
+    equalShot(0); 
+  }
+  break;
+ case 3:
+  if (ongoing){
+    minusShot(0); 
+  }
+  break;
+ }
+}
+
+void Shot::mechantShot(){
+  if (mechant->getFire()&& mechant->numberOfMinus>0){
+    if (bulletOfMechant== nullptr){
+      bulletOfMechant =  new MinusBullet(position->ary[mechant->id][mechant->number][0],position->ary[mechant->id][mechant->number][1], mechant->direction,position );
     } 
-    arrowBullet->completed(); 
-    break;
-  case 1:
-  for (int j = 0 ; j< position->numberOfEatchCaractere[1]; j++){
-      if (equalBullet->_x == position->ary[1][j][0]&& equalBullet->_y == position->ary[1][j][1]){
-        mechant->numberOfLife = mechant->numberOfLife -2 ;
-      }
-    }  
-    equalBullet->completed(); 
-    break;
-  case 2:
-    for (int j = 0 ; j< position->numberOfEatchCaractere[1]; j++){
-      if (minusBullet->_x == position->ary[1][j][0]&& minusBullet->_y == position->ary[1][j][1]){
-        mechant->numberOfLife -- ;
+    else if (bulletOfMechant->canProgress(3,1)){
+      if (millis() > timeCpt4 + bulletOfMechant->minusSpeed) { 
+        bulletOfMechant->go();
+        timeCpt4 = millis(); 
       }
     }
-    minusBullet->completed();
-    break;
-  
-  default:
-    break;
-  }
-  break;
+    else if (!bulletOfMechant->canProgress(3,1)){
+      
+      switch (bulletOfMechant->element()){
+        case 0: 
+          hero->numberOfLife --;
+            
+          position->ary[hero->id][hero->number][0]=0;
+          position->ary[hero->id][hero->number][1]=0;
+          position->sizeXCpt = 0; 
+          position->sizeYCpt = 0; 
+          lcd.clear(); 
 
- default:
- switch (TypeOfBullet)
-    {
-    case 0:
-      arrowBullet->completed(); 
-    case 1:
-      equalBullet->completed(); 
-      break;
-    case 2:
-      minusBullet->completed(); 
-      break;
-    
-    default:
-      break;
-    }
-  break;
- } 
-}
-
-
-void Shot::onlyHeroShot(){
-  
-  if (hero->getFire()){
-     
-    if (hero->numberOfArrow > 0)  {
-      if (arrowBullet== nullptr){
-        arrowBullet =  new ArrowBullet(position->ary[hero->id][hero->number][0],position->ary[hero->id][hero->number][1], hero->direction,position ); 
-        if (millis()> timeCpt2 + speed){
-          arrowBullet->inProgress(3); 
-          timeCpt2 = millis();
-        }
+          for (int k =0 ; k < 12; k ++ ){
+            for (int l = 0 ; l < position->numberOfEatchCaractere[k]; l ++ ){
+              if (position->ary[k][l][0]>=position->sizeXCpt && position->ary[k][l][0]<= sizeScreenOnX+position->sizeXCpt &&position->ary[k][l][1]>=position->sizeYCpt && position->ary[k][l][1]<= sizeScreenOnY+position->sizeYCpt && position->ary[k][l][2]>0){
+                display(k, position->ary[k][l][0], position->ary[k][l][1] );
+              }
+            }
+          }
+          break; 
+        case 1: 
+          display(bulletOfMechant->element(), bulletOfMechant->_x-position->sizeXCpt, bulletOfMechant->_y-position->sizeYCpt);
+          for (int j = 0 ; j< position->numberOfEatchCaractere[1]; j++){
+            if (bulletOfMechant->_x == position->ary[1][j][0]&& bulletOfMechant->_y == position->ary[1][j][1]){
+              mechant->numberOfLife -- ;
+            }
+          }
+          break; 
+        case 2: 
+          display(bulletOfMechant->element(), bulletOfMechant->_x-position->sizeXCpt, bulletOfMechant->_y-position->sizeYCpt);
+          break; 
       }
-      else if (arrowBullet->targetNotReach(true)==-1) {
-        if (millis()> timeCpt2 + speed){
-          arrowBullet->inProgress(3); 
-          timeCpt2 = millis();
-        }
-      }
-      else {
-        consequencies(arrowBullet->targetNotReach(true),0);
-        hero->numberOfArrow--; 
-        hero->setFireFalse(); 
-        delete arrowBullet;
-        arrowBullet = nullptr;
-      }
-    }
-    else if (hero->numberOfEqual > 0)  {
-      if (equalBullet== nullptr){
-        equalBullet = new EqualBullet(position->ary[hero->id][hero->number][0],position->ary[hero->id][hero->number][1], hero->direction, position); 
-        if (millis()> timeCpt2 + speed){
-          equalBullet->inProgress(9); 
-          timeCpt2 = millis();
-        }
-      }
-      else if (equalBullet->targetNotReach(false)==-1){
-        if (millis()> timeCpt2 + speed){
-          equalBullet->inProgress(9); 
-          timeCpt2 = millis();
-        }
-      }
-      else {
-        consequencies(equalBullet->targetNotReach(false),1);
-        hero->numberOfEqual--; 
-        hero->setFireFalse(); 
-        delete equalBullet;
-        equalBullet = nullptr;
-      }
-    }
-    else if (hero->numberOfMinus >0  ){
-      if (minusBullet==nullptr){
-        minusBullet = new MinusBullet(position->ary[hero->id][hero->number][0],position->ary[hero->id][hero->number][1], hero->direction,position);
-        if (millis()> timeCpt2 + speed){
-          minusBullet->inProgress(8); 
-          timeCpt2 = millis();
-        } 
-      }
-      else if (minusBullet->targetNotReach(false)==-1){
-        if (millis()> timeCpt2 + speed){
-          minusBullet->inProgress(8); 
-          timeCpt2 = millis();
-        }
-      }
-      else{
-        consequencies(minusBullet->targetNotReach(false),2); 
-        hero->numberOfMinus--; 
-        mechant->setFireFalse(); 
-        delete minusBullet;
-        minusBullet = nullptr;
-      }
-    }
-  }
-}
-
-void Shot::onlyMechantShot(){
-  
-  if (mechant->getFire()){
-     
-    if (minusBullet==nullptr){
-      minusBullet = new MinusBullet(position->ary[mechant->id][mechant->number][0],position->ary[mechant->id][mechant->number][1], mechant->direction,position);
-      if (millis()> timeCpt3 + speed){
-        minusBullet->inProgress(8); 
-        timeCpt3 = millis();
-      } 
-    }
-    else if (minusBullet->targetNotReach(false)==-1){
-      if (millis()> timeCpt3 + speed){
-        minusBullet->inProgress(8); 
-        timeCpt3 = millis();
-      }
-    }
-    else{
-      consequencies(minusBullet->targetNotReach(false),2); 
       mechant->numberOfMinus--; 
       mechant->setFireFalse(); 
-      delete minusBullet;
-      minusBullet = nullptr;
+      delete bulletOfMechant;
+      bulletOfMechant = nullptr; 
     }
   }
 }
-*/
 /******************************Menu********************************/
 
 
