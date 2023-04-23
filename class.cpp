@@ -1231,6 +1231,8 @@ void Mechant::allMechants(void (Mechant::*callback)()) {
     (this->arrayOfMechants[arrayOfMechants[i]->number]->*callback)();
   }
 }
+
+
 //END MECHANTS 
 
 

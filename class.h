@@ -162,7 +162,7 @@ class Mechant: public Parametre
 
     int id;
     int number;
-    
+
     int numberOfLife;
     int numberOfMinus;  
 
@@ -214,37 +214,50 @@ class Bullet: public Parametre
 {
   protected: 
     
-    int _direction; 
+     
     Position *position;
     int _charToDisplay ; 
     
   public: 
     int _x;
     int _y; 
+    int dir;
     Bullet(Position *position); 
-    void inProgress(int character); 
     int element(); 
-    int targetNotReach(bool breakObstacle); 
-    void completed();
     
-     
+    void displayStar();
+    int direction ();  
+    bool canProgress(int numberOfCharacterLimite, int numberCharacterNoChecked);    
+    
 }; 
-
-class MinusBullet:  public Bullet
+class ArrowBullet: virtual public Bullet
 {
+  protected: 
   public:
-    MinusBullet(int x, int y , int direction,Position *position);
-    
-};
-class EqualBullet:  public Bullet
-{
-  public:
-    EqualBullet(int x, int y , int direction,Position *position);
-};
-class ArrowBullet:  public Bullet
-{
-  public:
+    int arrowSpeed; 
     ArrowBullet(int x, int y , int direction,Position *position);
+    void go(); 
+};
+
+class EqualBullet: virtual public Bullet
+{
+  protected: 
+  public:
+    int equalSpeed; 
+    EqualBullet(int x, int y , int direction,Position *position);
+
+    void go(); 
+};
+class MinusBullet: virtual public Bullet
+{
+  protected:
+  public:
+    int minusSpeed; 
+    MinusBullet(int x, int y , int direction,Position *position);
+
+    void go(); 
+    
+    
 };
 
 class Shot: virtual public Parametre
@@ -257,13 +270,21 @@ class Shot: virtual public Parametre
     EqualBullet *equalBullet;
     MinusBullet *minusBullet;
     MinusBullet *bulletOfMechant;
-    int _speed ;
+    bool ongoing; 
   public: 
     Shot(Position *position, Hero *hero, Mechant *mechant);
-    void 	initializeShot(); 
-    void onlyHeroShot(); 
-    void onlyMechantShot(); 
-    void consequencies(int numberOfTheTarget, int TypeOfBullet); 
+    int typeOfMunition(); 
+    void arrowShot(int numberCharacterNoChecked); 
+    void equalShot(int numberCharacterNoChecked); 
+    void minusShot(int numberCharacterNoChecked); 
+    void heroShot(); 
+    void mechantShot(); 
+
+    void consequenciesArrow(); 
+    void consequenciesEqual(); 
+    void consequenciesMinus(); 
+
+    void bulletReachHero(); 
 }; 
 
 class SecondaryScreen: virtual public Parametre
